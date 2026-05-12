@@ -1,6 +1,8 @@
-body {
+html, body {
   margin: 0;
-  background-color: darkblue;
+  padding: 0;
+  height: 100%;
+  background-color: whitesmoke;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;

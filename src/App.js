@@ -1,6 +1,6 @@
 function App() {
   return (
-    <div style={{ textAlign: 'center', marginTop: '100px', minHeight: '100vh', backgroundColor: 'darkblue', color: 'white' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: 'whitesmoke', color: 'black' }}>
       <h1>Welcome to Claude Code</h1>
     </div>
   );
