@@ -2,9 +2,18 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchProducts } from './services/productService';
 
+const PAGE_SIZE = 15;
+
+function getAvailabilityColor(status) {
+  if (status === 'Low Stock') return 'red';
+  if (status === 'In Stock') return 'green';
+  return 'inherit';
+}
+
 function MainPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     fetchProducts().then((data) => {
@@ -12,6 +21,9 @@ function MainPage() {
       setLoading(false);
     });
   }, []);
+
+  const totalPages = Math.ceil(products.length / PAGE_SIZE);
+  const paginated = products.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: 'whitesmoke' }}>
@@ -28,24 +40,49 @@ function MainPage() {
         {loading ? (
           <p>Loading...</p>
         ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-            <thead>
-              <tr style={{ backgroundColor: '#2c3e50', color: 'white' }}>
-                <th style={th}>ID</th>
-                <th style={th}>Category</th>
-                <th style={th}>Price ($)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product, index) => (
-                <tr key={product.id} style={{ backgroundColor: index % 2 === 0 ? '#f9f9f9' : 'white' }}>
-                  <td style={td}>{product.id}</td>
-                  <td style={td}>{product.category}</td>
-                  <td style={td}>{product.price}</td>
+          <>
+            <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+              <thead>
+                <tr style={{ backgroundColor: '#2c3e50', color: 'white' }}>
+                  <th style={th}>ID</th>
+                  <th style={th}>Category</th>
+                  <th style={th}>Price ($)</th>
+                  <th style={th}>Availability</th>
                 </tr>
+              </thead>
+              <tbody>
+                {paginated.map((product, index) => (
+                  <tr key={product.id} style={{ backgroundColor: index % 2 === 0 ? '#f9f9f9' : 'white' }}>
+                    <td style={td}>{product.id}</td>
+                    <td style={td}>{product.category}</td>
+                    <td style={td}>{product.price}</td>
+                    <td style={{ ...td, color: getAvailabilityColor(product.availabilityStatus) }}>
+                      {product.availabilityStatus}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Pagination */}
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', marginTop: '24px' }}>
+              <button style={btnStyle} onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
+                Previous
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  style={{ ...btnStyle, backgroundColor: page === currentPage ? '#2c3e50' : '#e0e0e0', color: page === currentPage ? 'white' : '#333' }}
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </button>
               ))}
-            </tbody>
-          </table>
+              <button style={btnStyle} onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>
+                Next
+              </button>
+            </div>
+          </>
         )}
       </main>
 
@@ -60,5 +97,6 @@ function MainPage() {
 
 const th = { padding: '12px 16px', textAlign: 'left', fontWeight: 'bold' };
 const td = { padding: '10px 16px', borderBottom: '1px solid #ddd' };
+const btnStyle = { padding: '6px 12px', cursor: 'pointer', border: '1px solid #ccc', borderRadius: '4px', backgroundColor: '#e0e0e0', color: '#333' };
 
 export default MainPage;
