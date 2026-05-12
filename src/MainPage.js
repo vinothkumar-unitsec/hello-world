@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchProducts } from './services/productService';
 
-const PAGE_SIZE = 15;
+const PAGE_SIZE = 10;
 
 function getAvailabilityColor(status) {
   if (status === 'Low Stock') return 'red';
@@ -35,7 +35,7 @@ function MainPage() {
       </header>
 
       {/* Content */}
-      <main style={{ flex: 1, padding: '32px', marginTop: '64px', marginBottom: '56px' }}>
+      <main style={{ flex: 1, padding: '32px', marginTop: '64px', marginBottom: '108px' }}>
         <h3>Product List</h3>
         {loading ? (
           <p>Loading...</p>
@@ -64,27 +64,36 @@ function MainPage() {
               </tbody>
             </table>
 
-            {/* Pagination */}
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', marginTop: '24px' }}>
-              <button style={btnStyle} onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
-                Previous
-              </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  style={{ ...btnStyle, backgroundColor: page === currentPage ? '#2c3e50' : '#e0e0e0', color: page === currentPage ? 'white' : '#333' }}
-                  onClick={() => setCurrentPage(page)}
-                >
-                  {page}
-                </button>
-              ))}
-              <button style={btnStyle} onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>
-                Next
-              </button>
-            </div>
           </>
         )}
       </main>
+
+      {/* Pagination */}
+      {!loading && (
+        <div style={{ position: 'fixed', bottom: '56px', left: 0, right: 0, zIndex: 99, backgroundColor: 'whitesmoke', padding: '10px 32px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', borderTop: '1px solid #ddd' }}>
+          <button style={btnStyle} onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
+            First
+          </button>
+          <button style={btnStyle} onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
+            Previous
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              style={{ ...btnStyle, backgroundColor: page === currentPage ? '#2c3e50' : '#e0e0e0', color: page === currentPage ? 'white' : '#333' }}
+              onClick={() => setCurrentPage(page)}
+            >
+              {page}
+            </button>
+          ))}
+          <button style={btnStyle} onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>
+            Next
+          </button>
+          <button style={btnStyle} onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>
+            Last
+          </button>
+        </div>
+      )}
 
       {/* Footer */}
       <footer style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 100, backgroundColor: '#2c3e50', color: 'white', padding: '16px 32px', textAlign: 'center' }}>

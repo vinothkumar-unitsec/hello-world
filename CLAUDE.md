@@ -22,7 +22,7 @@ Single-page React app with client-side routing via `react-router-dom`.
 **Data fetching:**
 - `src/services/productService.js` — All API calls go here. Currently fetches products from `https://dummyjson.com/products`.
 
-**MainPage.js** is the main feature page: fetches products on mount, renders a paginated table (15 items/page) with ID, Category, Price, and Availability columns. Availability is color-coded — green for "In Stock", red for "Low Stock".
+**MainPage.js** is the main feature page: fetches products on mount, renders a paginated table (10 items/page) with ID, Category, Price, and Availability columns. Availability is color-coded — green for "In Stock", red for "Low Stock".
 
 ## Conventions
 
