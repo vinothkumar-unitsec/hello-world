@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "bash",
+            "statusMessage": "Checking if CLAUDE.md needs updating...",
+            "command": "[ ! -f \"CLAUDE.md\" ] && echo '{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"CLAUDE.md is missing. Run /init to create project documentation.\"}}' && exit 0; newer=$(find . -not -path './.git/*' -not -path './node_modules/*' \\( -name '*.js' -o -name '*.jsx' -o -name '*.ts' -o -name '*.tsx' -o -name '*.json' -o -name '*.css' \\) -newer CLAUDE.md 2>/dev/null | grep -v node_modules | head -3); [ -n \"$newer\" ] && echo \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"SessionStart\\\",\\\"additionalContext\\\":\\\"Project files have changed since CLAUDE.md was last updated. Run /init now to refresh it before starting work.\\\"}}\" || true"
+          }
+        ]
+      }
+    ]
+  }
+}
